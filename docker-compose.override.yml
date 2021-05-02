@@ -1,0 +1,8 @@
+version: '3.9'
+
+services:
+  mymicroservice:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    ports:
+      - "9400:80" # Exposes port 80 from container as port 9400 on local machine

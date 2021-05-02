@@ -1,0 +1,6 @@
+version: '3.9'
+
+services:
+  mymicroservice:
+    build:
+      context: MyMicroservice # Path to folder with Dockerfile

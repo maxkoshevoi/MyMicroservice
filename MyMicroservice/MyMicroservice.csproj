@@ -1,11 +1,12 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
     
     <!--Uncomment to execute full Dockerfile in Debug mode. By default only "base" is executed and build is performed locally-->
-    <!--<ContainerdevelopmentMode>Regular</ContainerdevelopmentMode>-->
+    <!--<ContainerDevelopmentMode>Regular</ContainerDevelopmentMode>-->
   </PropertyGroup>
 
   <ItemGroup>
