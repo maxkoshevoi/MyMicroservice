@@ -9,3 +9,9 @@ services:
 
   db:
     image: redis:alpine
+
+  healthcheckui:
+    build:
+      context: HealthCheckUI
+    depends_on:
+      - mymicroservice
