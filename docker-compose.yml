@@ -4,3 +4,8 @@ services:
   mymicroservice:
     build:
       context: MyMicroservice # Path to folder with Dockerfile
+    depends_on:
+      - db
+
+  db:
+    image: redis:alpine

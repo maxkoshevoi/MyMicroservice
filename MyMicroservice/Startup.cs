@@ -31,6 +31,11 @@ namespace MyMicroservice
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "MyMicroservice", Version = "v1" });
             });
+            services.AddStackExchangeRedisCache(o =>
+            {
+                string con = Configuration.GetConnectionString("redis");
+                o.Configuration = con;
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
