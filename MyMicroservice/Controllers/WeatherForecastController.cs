@@ -1,9 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Linq;
+using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace MyMicroservice.Controllers
 {
@@ -24,16 +25,33 @@ namespace MyMicroservice.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<WeatherForecast> Get()
+        public async Task<string> Get([FromServices] IDistributedCache cache)
         {
-            var rng = new Random();
-            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
+            var weather = await cache.GetStringAsync("weather");
+            if (weather == null)
             {
-                Date = DateTime.Now.AddDays(index),
-                TemperatureC = rng.Next(-20, 55),
-                Summary = Summaries[rng.Next(Summaries.Length)]
-            })
-            .ToArray();
+                weather = GetWeatherStaticData();
+                await cache.SetStringAsync("weather", weather, new DistributedCacheEntryOptions
+                {
+                    AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(5)
+                });
+            }
+
+            return weather;
+        }
+
+        private static string GetWeatherStaticData()
+        {
+            Random rng = new();
+            var forecasts = Enumerable.Range(1, 5)
+                .Select(index => new WeatherForecast
+                {
+                    Date = DateTime.Now.AddDays(index),
+                    TemperatureC = rng.Next(-20, 55),
+                    Summary = Summaries[rng.Next(Summaries.Length)]
+                });
+
+            return JsonSerializer.Serialize(forecasts);
         }
     }
 }
