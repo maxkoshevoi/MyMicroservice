@@ -3,6 +3,9 @@
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    
+    <!--Uncomment to execute full Dockerfile in Debug mode. By default only "base" is executed and build is performed locally-->
+    <!--<ContainerdevelopmentMode>Regular</ContainerdevelopmentMode>-->
   </PropertyGroup>
 
   <ItemGroup>
