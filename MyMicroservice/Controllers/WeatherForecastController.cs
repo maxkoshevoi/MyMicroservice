@@ -40,7 +40,7 @@ namespace MyMicroservice.Controllers
             return weather;
         }
 
-        private static string GetWeatherStaticData()
+        internal static string GetWeatherStaticData()
         {
             Random rng = new();
             var forecasts = Enumerable.Range(1, 5)

@@ -3,7 +3,8 @@ version: '3.9'
 services:
   mymicroservice:
     build:
-      context: MyMicroservice # Path to folder with Dockerfile
+      context: . # Build root directory. It's set at solution level to include Directory.Build.props
+      dockerfile: MyMicroservice\Dockerfile
     depends_on:
       - db
 
@@ -12,4 +13,5 @@ services:
 
   healthcheckui:
     build:
-      context: HealthCheckUI
+      context: .
+      dockerfile: HealthCheckUI\Dockerfile
