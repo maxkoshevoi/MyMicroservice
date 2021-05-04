@@ -9,7 +9,7 @@ services:
       - db
 
   db:
-    image: redis:alpine
+    image: redis:alpine # alpine - lightweight version of Linux
 
   seq:
     image: datalust/seq

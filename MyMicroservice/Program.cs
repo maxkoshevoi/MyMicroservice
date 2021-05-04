@@ -14,12 +14,8 @@ namespace MyMicroservice
 
         public static void Main(string[] args)
         {
-            Log.Logger = CreateSerilogLogger();
-
             try
             {
-                Log.Information("Starting Web Host");
-
                 Activity.DefaultIdFormat = ActivityIdFormat.W3C;
                 CreateHostBuilder(args).Build().Run();
             }
@@ -35,24 +31,25 @@ namespace MyMicroservice
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
-                .UseSerilog()
+                .UseSerilog((context, config) =>
+                {
+                    // See https://jkdev.me/asp-net-core-serilog for more information on how to configure Serilog
+
+                    string? instrumentationKey = context.Configuration["APPINSIGHTS_INSTRUMENTATIONKEY"];
+
+                    config
+                        .ReadFrom.Configuration(context.Configuration)
+                        .Enrich.WithProperty("ApplicationContext", APP_NAME)
+                        .Enrich.WithProperty("DebuggerAttached", Debugger.IsAttached) // Useful when doing Seq dashboards and want to remove logs under debugging session.
+                        .Enrich.WithSpan()
+                        .Enrich.FromLogContext()
+                        .WriteTo.Console()
+                        .WriteTo.Seq("http://seq:5341")
+                        .WriteTo.ApplicationInsights(instrumentationKey, TelemetryConverter.Traces);
+                })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
                 });
-
-        private static Serilog.ILogger CreateSerilogLogger()
-        {
-            string? instrumentationKey = Environment.GetEnvironmentVariable("APPINSIGHTS_INSTRUMENTATIONKEY");
-
-            return new LoggerConfiguration()
-                .Enrich.WithProperty("ApplicationContext", APP_NAME)
-                .Enrich.WithSpan()
-                .Enrich.FromLogContext()
-                .WriteTo.Console()
-                .WriteTo.Seq("http://seq:5341")
-                .WriteTo.ApplicationInsights(instrumentationKey, TelemetryConverter.Traces)
-                .CreateLogger();
-        }
     }
 }
