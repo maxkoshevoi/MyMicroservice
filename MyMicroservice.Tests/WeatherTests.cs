@@ -8,7 +8,7 @@ namespace MyMicroservice.Tests
         [Fact]
         public void Test1()
         {
-            string staticWeather = WeatherForecastController.GetWeatherStaticData();
+            string staticWeather = WeatherForecastController.GetWeatherData();
             Assert.NotNull(staticWeather);
         }
     }

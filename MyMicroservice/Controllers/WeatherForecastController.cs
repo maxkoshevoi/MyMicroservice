@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
+using Microsoft.FeatureManagement;
 using System;
 using System.Linq;
 using System.Text.Json;
@@ -18,21 +19,33 @@ namespace MyMicroservice.Controllers
         };
 
         private readonly ILogger<WeatherForecastController> _logger;
+        private readonly IFeatureManager _featureManager;
 
-        public WeatherForecastController(ILogger<WeatherForecastController> logger)
+        public WeatherForecastController(ILogger<WeatherForecastController> logger, IFeatureManager featureManager)
         {
             _logger = logger;
+            _featureManager = featureManager;
         }
 
         [HttpGet]
         public async Task<string> Get([FromServices] IDistributedCache cache)
         {
-            var weather = await cache.GetStringAsync("weather");
+            bool useCache = await _featureManager.IsEnabledAsync("RedisCache");
+            string weather = useCache ? await GetCachedWeatherData(cache) : GetWeatherData();
+
+            _logger.LogInformation("Weather data - {data}", weather);
+
+            return weather;
+        }
+
+        private async Task<string> GetCachedWeatherData(IDistributedCache cache)
+        {
+            string? weather = await cache.GetStringAsync("weather");
             if (weather == null)
             {
                 _logger.LogInformation("Weather data cache miss");
 
-                weather = GetWeatherStaticData();
+                weather = GetWeatherData();
                 await cache.SetStringAsync("weather", weather, new DistributedCacheEntryOptions
                 {
                     AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(5)
@@ -43,12 +56,10 @@ namespace MyMicroservice.Controllers
                 _logger.LogInformation("Weather data found in cache");
             }
 
-            _logger.LogInformation("Weather data - {data}", weather);
-
             return weather;
         }
 
-        internal static string GetWeatherStaticData()
+        internal static string GetWeatherData()
         {
             Random rng = new();
             var forecasts = Enumerable.Range(1, 5)

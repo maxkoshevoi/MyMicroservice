@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
+using Microsoft.FeatureManagement;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using System;
@@ -35,6 +36,14 @@ namespace MyMicroservice
                 o.Configuration = con;
             });
 
+            // Feature management
+            // See https://github.com/microsoft/FeatureManagement-Dotnet#aspnet-core-feature-flags for more info
+            if (Configuration.UseFeatureManagement())
+            {
+                services.AddFeatureManagement();
+                services.AddAzureAppConfiguration();
+            }
+
             // Health checks
             services.AddHealthChecks(Configuration);
 
@@ -50,6 +59,12 @@ namespace MyMicroservice
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "MyMicroservice v1"));
+            }
+
+            // Refresh feature flags
+            if (Configuration.UseFeatureManagement())
+            {
+                app.UseAzureAppConfiguration();
             }
 
             app.UseRouting();
@@ -116,5 +131,8 @@ namespace MyMicroservice
 
             return services;
         }
+
+        public static bool UseFeatureManagement(this IConfiguration configuration) =>
+            configuration.GetValue("UseFeatureManagement", false) == true;
     }
 }

@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using Serilog.Enrichers.Span;
@@ -50,6 +51,17 @@ namespace MyMicroservice
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
+                })
+                .ConfigureAppConfiguration((_, configBuilder) =>
+                {
+                    var configuration = configBuilder.Build();
+                    if (configuration.UseFeatureManagement())
+                    {
+                        configBuilder.AddAzureAppConfiguration(options =>
+                        {
+                            options.Connect(configuration["AppConfig:Endpoint"]).UseFeatureFlags();
+                        });
+                    }
                 });
     }
 }
