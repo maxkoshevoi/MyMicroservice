@@ -4,19 +4,24 @@ FROM mcr.microsoft.com/dotnet/aspnet:5.0 AS base
 WORKDIR /app
 EXPOSE 80
 
-FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
+# Restoring projects before copying source code to take advantage of caching
+# If source code would change (but project file wouldn't) results from previous execution of restore steps will be used
+FROM mcr.microsoft.com/dotnet/sdk:5.0 AS restore
 WORKDIR /src
+COPY ["MyMicroservice/MyMicroservice.csproj", "MyMicroservice/"]
+RUN dotnet restore "MyMicroservice/MyMicroservice.csproj"
+COPY ["MyMicroservice.Tests/MyMicroservice.Tests.csproj", "MyMicroservice.Tests/"]
+RUN dotnet restore "MyMicroservice.Tests/MyMicroservice.Tests.csproj"
 COPY . .
-WORKDIR /src/MyMicroservice
-RUN dotnet build "MyMicroservice.csproj" -c Release -o /app/build
 
-FROM build AS test
+FROM restore AS test
 WORKDIR /src/MyMicroservice.Tests
 RUN dotnet test
 
+# It could be "restore AS publish", but then "test" stage wouldn't be executed
 FROM test AS publish
 WORKDIR /src/MyMicroservice
-RUN dotnet publish "MyMicroservice.csproj" -c Release -o /app/publish
+RUN dotnet publish -c Release -o /app/publish
 
 FROM base AS final
 WORKDIR /app

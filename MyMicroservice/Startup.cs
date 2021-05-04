@@ -24,17 +24,24 @@ namespace MyMicroservice
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddAppInsights(Configuration);
             services.AddControllers();
+         
+            // Swagger
             services.AddSwaggerGen();
+
+            // Redis cache
             services.AddStackExchangeRedisCache(o =>
             {
                 string con = Configuration.GetConnectionString("redis");
                 o.Configuration = con;
             });
 
+            // Health checks
             services.AddHealthChecks(Configuration);
+
+            // Logging and tracing
             services.AddOpenTelemetryTracing(Configuration);
+            services.AddAppInsights(Configuration);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
