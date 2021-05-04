@@ -2,13 +2,16 @@ using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.FeatureManagement;
+using MyMicroservice.Middlewares;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
+using Serilog;
 using System;
 
 namespace MyMicroservice
@@ -37,7 +40,7 @@ namespace MyMicroservice
             });
 
             // Feature management
-            // See https://github.com/microsoft/FeatureManagement-Dotnet#aspnet-core-feature-flags for more info
+            // See https://docs.microsoft.com/en-us/azure/azure-app-configuration/use-feature-flags-dotnet-core?tabs=core5x#feature-flag-checks for more info
             if (Configuration.UseFeatureManagement())
             {
                 services.AddFeatureManagement();
@@ -61,6 +64,10 @@ namespace MyMicroservice
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "MyMicroservice v1"));
             }
 
+            // This will make the HTTP requests log as rich logs instead of plain text
+            // (needs to be before UseRouting, UseEndpoints and other similar configuration)
+            app.UseSerilogRequestLogging();
+
             // Refresh feature flags
             if (Configuration.UseFeatureManagement())
             {
@@ -72,6 +79,7 @@ namespace MyMicroservice
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapFeatureManagement("/features");
                 endpoints.MapHealthChecks("/readiness", new HealthCheckOptions
                 {
                     ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
@@ -131,8 +139,23 @@ namespace MyMicroservice
 
             return services;
         }
+    }
 
+    public static class ConfigurationExtensions
+    {
         public static bool UseFeatureManagement(this IConfiguration configuration) =>
-            configuration.GetValue("UseFeatureManagement", false) == true;
+               configuration.GetValue("UseFeatureManagement", false) == true;
+    }
+
+    public static class EndpointRouteBuilderExtensions
+    {
+        public static IEndpointConventionBuilder MapFeatureManagement(this IEndpointRouteBuilder endpoints, string pattern)
+        {
+            var pipeline = endpoints.CreateApplicationBuilder()
+                .UseMiddleware<FeatureManagementMiddleware>()
+                .Build();
+
+            return endpoints.MapGet(pattern, pipeline);
+        }
     }
 }

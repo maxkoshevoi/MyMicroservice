@@ -48,20 +48,18 @@ namespace MyMicroservice
                         .WriteTo.Seq("http://seq:5341")
                         .WriteTo.ApplicationInsights(instrumentationKey, TelemetryConverter.Traces);
                 })
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseStartup<Startup>();
-                })
-                .ConfigureAppConfiguration((_, configBuilder) =>
+                .ConfigureAppConfiguration(configBuilder =>
                 {
                     var configuration = configBuilder.Build();
                     if (configuration.UseFeatureManagement())
                     {
                         configBuilder.AddAzureAppConfiguration(options =>
-                        {
-                            options.Connect(configuration["AppConfig:Endpoint"]).UseFeatureFlags();
-                        });
+                            options.Connect(configuration["AppConfig:Endpoint"]).UseFeatureFlags());
                     }
+                })
+                .ConfigureWebHostDefaults(webBuilder =>
+                {
+                    webBuilder.UseStartup<Startup>();
                 });
     }
 }
