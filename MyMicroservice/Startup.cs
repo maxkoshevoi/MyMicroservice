@@ -135,7 +135,7 @@ namespace MyMicroservice
         public static IServiceCollection AddAppInsights(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddApplicationInsightsTelemetry(configuration);
-            services.AddApplicationInsightsKubernetesEnricher();
+            //services.AddApplicationInsightsKubernetesEnricher();
 
             return services;
         }
