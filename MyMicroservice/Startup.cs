@@ -7,6 +7,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
+using System;
 
 namespace MyMicroservice
 {
@@ -31,6 +34,7 @@ namespace MyMicroservice
             });
 
             services.AddHealthChecks(Configuration);
+            services.AddOpenTelemetryTracing(Configuration);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -68,6 +72,33 @@ namespace MyMicroservice
             services.AddHealthChecks()
                 .AddCheck("self", () => HealthCheckResult.Healthy())
                 .AddRedis(redisConnectionStr, name: "redis-check", tags: new[] { "redis" });
+
+            return services;
+        }
+
+        public static IServiceCollection AddOpenTelemetryTracing(this IServiceCollection services, IConfiguration configuration)
+        {
+            var exporter = configuration.GetValue<string>("UseExporter").ToLowerInvariant();
+            services.AddOpenTelemetryTracing(builder =>
+            {
+                if (exporter == "zipkin")
+                {
+                    builder
+                        .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService(Program.APP_NAME))
+                        .AddZipkinExporter(zipkinOptions =>
+                        {
+                            zipkinOptions.Endpoint = new Uri($"http://zipkin:9411/api/v2/spans");
+                        });
+                }
+                else
+                {
+                    builder.AddConsoleExporter();
+                }
+
+                builder
+                    .AddAspNetCoreInstrumentation()
+                    .AddHttpClientInstrumentation();
+            });
 
             return services;
         }

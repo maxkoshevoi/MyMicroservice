@@ -11,6 +11,10 @@ services:
   seq:
     ports:
       - "9402:80"
+  
+  zipkin:
+    ports:
+      - "9403:9411"
 
   healthcheckui:
     environment:

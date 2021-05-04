@@ -16,6 +16,9 @@ services:
     environment:
       - ACCEPT_EULA=Y
 
+  zipkin:
+    image: openzipkin/zipkin
+
   healthcheckui:
     build:
       context: .

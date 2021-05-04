@@ -10,7 +10,7 @@ namespace MyMicroservice
 {
     public class Program
     {
-        static readonly string? APP_NAME = Assembly.GetExecutingAssembly().GetName().Name;
+        public static readonly string? APP_NAME = Assembly.GetExecutingAssembly().GetName().Name;
 
         public static void Main(string[] args)
         {
