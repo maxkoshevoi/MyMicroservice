@@ -30,12 +30,20 @@ namespace MyMicroservice.Controllers
             var weather = await cache.GetStringAsync("weather");
             if (weather == null)
             {
+                _logger.LogInformation("Weather data cache miss");
+
                 weather = GetWeatherStaticData();
                 await cache.SetStringAsync("weather", weather, new DistributedCacheEntryOptions
                 {
                     AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(5)
                 });
             }
+            else
+            {
+                _logger.LogInformation("Weather data found in cache");
+            }
+
+            _logger.LogInformation("Weather data - {data}", weather);
 
             return weather;
         }

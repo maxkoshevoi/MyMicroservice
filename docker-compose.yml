@@ -11,6 +11,11 @@ services:
   db:
     image: redis:alpine
 
+  seq:
+    image: datalust/seq
+    environment:
+      - ACCEPT_EULA=Y
+
   healthcheckui:
     build:
       context: .

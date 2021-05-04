@@ -21,12 +21,9 @@ namespace MyMicroservice
 
         public void ConfigureServices(IServiceCollection services)
         {
-
+            services.AddAppInsights(Configuration);
             services.AddControllers();
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "MyMicroservice", Version = "v1" });
-            });
+            services.AddSwaggerGen();
             services.AddStackExchangeRedisCache(o =>
             {
                 string con = Configuration.GetConnectionString("redis");
@@ -46,9 +43,7 @@ namespace MyMicroservice
             }
 
             app.UseRouting();
-
             app.UseAuthorization();
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
@@ -73,6 +68,14 @@ namespace MyMicroservice
             services.AddHealthChecks()
                 .AddCheck("self", () => HealthCheckResult.Healthy())
                 .AddRedis(redisConnectionStr, name: "redis-check", tags: new[] { "redis" });
+
+            return services;
+        }
+
+        public static IServiceCollection AddAppInsights(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.AddApplicationInsightsTelemetry(configuration);
+            services.AddApplicationInsightsKubernetesEnricher();
 
             return services;
         }

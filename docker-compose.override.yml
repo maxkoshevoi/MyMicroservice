@@ -4,8 +4,13 @@ services:
   mymicroservice:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+      - APPINSIGHTS_INSTRUMENTATIONKEY=00000000-0000-0000-0000-000000000000 # Each microservice requires a different instrumentation key
     ports:
       - "9400:80" # Exposes port 80 from container as port 9400 on local machine
+
+  seq:
+    ports:
+      - "9402:80"
 
   healthcheckui:
     environment:
