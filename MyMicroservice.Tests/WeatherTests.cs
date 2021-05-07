@@ -9,6 +9,7 @@ namespace MyMicroservice.Tests
         public void Test1()
         {
             string staticWeather = WeatherForecastController.GetWeatherData();
+            
             Assert.NotNull(staticWeather);
         }
     }

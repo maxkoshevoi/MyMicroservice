@@ -14,6 +14,8 @@ COPY ["MyMicroservice.Tests/MyMicroservice.Tests.csproj", "MyMicroservice.Tests/
 RUN dotnet restore "MyMicroservice.Tests/MyMicroservice.Tests.csproj"
 COPY . .
 
+# You can run Unit Test when image is being built.
+# This won't affect debugging speed since Visual Studio only executes "base" stage in Debug mode
 FROM restore AS test
 WORKDIR /src/MyMicroservice.Tests
 RUN dotnet test
