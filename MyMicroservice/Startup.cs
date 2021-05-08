@@ -7,12 +7,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
-using Microsoft.FeatureManagement;
+using MyMicroservice.Common.Extensions.FeatureManagement;
+using MyMicroservice.Common.Extensions.Telemetry;
 using MyMicroservice.Middlewares;
-using OpenTelemetry.Resources;
-using OpenTelemetry.Trace;
-using Serilog;
-using System;
 
 namespace MyMicroservice
 {
@@ -27,6 +24,9 @@ namespace MyMicroservice
 
         public void ConfigureServices(IServiceCollection services)
         {
+            // Logging and tracing
+            services.AddTelemetry(Program.APP_NAME);
+
             services.AddControllers();
          
             // Swagger
@@ -40,19 +40,10 @@ namespace MyMicroservice
             });
 
             // Feature management
-            // See https://docs.microsoft.com/en-us/azure/azure-app-configuration/use-feature-flags-dotnet-core?tabs=core5x#feature-flag-checks for more info
-            if (Configuration.UseFeatureManagement())
-            {
-                services.AddFeatureManagement();
-                services.AddAzureAppConfiguration();
-            }
+            services.AddAzureFeatureManagement();
 
             // Health checks
             services.AddHealthChecks(Configuration);
-
-            // Logging and tracing
-            services.AddOpenTelemetryTracing(Configuration);
-            services.AddAppInsights(Configuration);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -64,15 +55,8 @@ namespace MyMicroservice
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "MyMicroservice v1"));
             }
 
-            // This will make the HTTP requests log as rich logs instead of plain text
-            // (needs to be before UseRouting, UseEndpoints and other similar configuration)
-            app.UseSerilogRequestLogging();
-
-            // Refresh feature flags
-            if (Configuration.UseFeatureManagement())
-            {
-                app.UseAzureAppConfiguration();
-            }
+            app.UseTelemetry();
+            app.UseAzureAppConfiguration();
 
             app.UseRouting();
             app.UseAuthorization();
@@ -80,13 +64,17 @@ namespace MyMicroservice
             {
                 endpoints.MapControllers();
                 endpoints.MapFeatureManagement("/features");
-                endpoints.MapHealthChecks("/readiness", new HealthCheckOptions
-                {
-                    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
-                });
+                
+                // Is container alive
                 endpoints.MapHealthChecks("/liveness", new HealthCheckOptions
                 {
                     Predicate = r => r.Name == "self"
+                });
+
+                // Is container able to perform work (all dependencies are also checked)
+                endpoints.MapHealthChecks("/readiness", new HealthCheckOptions
+                {
+                    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
                 });
             });
         }
@@ -104,47 +92,6 @@ namespace MyMicroservice
 
             return services;
         }
-
-        public static IServiceCollection AddOpenTelemetryTracing(this IServiceCollection services, IConfiguration configuration)
-        {
-            var exporter = configuration.GetValue<string>("UseExporter").ToLowerInvariant();
-            services.AddOpenTelemetryTracing(builder =>
-            {
-                if (exporter == "zipkin")
-                {
-                    builder
-                        .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService(Program.APP_NAME))
-                        .AddZipkinExporter(zipkinOptions =>
-                        {
-                            zipkinOptions.Endpoint = new Uri($"http://zipkin:9411/api/v2/spans");
-                        });
-                }
-                else
-                {
-                    builder.AddConsoleExporter();
-                }
-
-                builder
-                    .AddAspNetCoreInstrumentation()
-                    .AddHttpClientInstrumentation();
-            });
-
-            return services;
-        }
-
-        public static IServiceCollection AddAppInsights(this IServiceCollection services, IConfiguration configuration)
-        {
-            services.AddApplicationInsightsTelemetry(configuration);
-            //services.AddApplicationInsightsKubernetesEnricher();
-
-            return services;
-        }
-    }
-
-    public static class ConfigurationExtensions
-    {
-        public static bool UseFeatureManagement(this IConfiguration configuration) =>
-               configuration.GetValue("UseFeatureManagement", false) == true;
     }
 
     public static class EndpointRouteBuilderExtensions

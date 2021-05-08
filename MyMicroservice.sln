@@ -7,9 +7,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyMicroservice", "MyMicrose
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{7A723D95-8946-42B4-9685-9818075CCEB2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HealthCheckUI", "HealthCheckUI\HealthCheckUI.csproj", "{93498D71-1B63-4B16-AC9C-C2AD7F3D87FF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HealthCheckUI", "HealthCheckUI\HealthCheckUI.csproj", "{93498D71-1B63-4B16-AC9C-C2AD7F3D87FF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyMicroservice.Tests", "MyMicroservice.Tests\MyMicroservice.Tests.csproj", "{FD303006-0A3E-46F7-BF7E-350F4FEDBCEF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyMicroservice.Tests", "MyMicroservice.Tests\MyMicroservice.Tests.csproj", "{FD303006-0A3E-46F7-BF7E-350F4FEDBCEF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyMicroservice.Common", "MyMicroservice.Common\MyMicroservice.Common.csproj", "{EAD2B530-14A6-40F0-B39C-ABF6F82E028F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{CB267491-42F6-4683-ADFB-31BE41A5270A}"
 	ProjectSection(SolutionItems) = preProject
@@ -38,6 +40,10 @@ Global
 		{FD303006-0A3E-46F7-BF7E-350F4FEDBCEF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FD303006-0A3E-46F7-BF7E-350F4FEDBCEF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FD303006-0A3E-46F7-BF7E-350F4FEDBCEF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EAD2B530-14A6-40F0-B39C-ABF6F82E028F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EAD2B530-14A6-40F0-B39C-ABF6F82E028F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EAD2B530-14A6-40F0-B39C-ABF6F82E028F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EAD2B530-14A6-40F0-B39C-ABF6F82E028F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

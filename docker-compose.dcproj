@@ -7,11 +7,11 @@
     <DockerLaunchAction>LaunchBrowser</DockerLaunchAction>
     <DockerServiceUrl>{Scheme}://localhost:{ServicePort}/swagger</DockerServiceUrl>
     <DockerServiceName>mymicroservice</DockerServiceName>
-
     <!--Uncomment to execute full Dockerfile in Debug mode. By default only "base" is executed and build is performed locally-->
     <!--<ContainerDevelopmentMode>Regular</ContainerDevelopmentMode>-->
   </PropertyGroup>
   <ItemGroup>
+    <None Include=".env" />
     <None Include="docker-compose.override.yml">
       <DependentUpon>docker-compose.yml</DependentUpon>
     </None>

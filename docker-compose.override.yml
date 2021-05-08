@@ -3,11 +3,10 @@ version: '3.9'
 services:
   mymicroservice:
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - APPINSIGHTS_INSTRUMENTATIONKEY=00000000-0000-0000-0000-000000000000 # Each microservice requires a different instrumentation key
-      - UseFeatureManagement=False # Switch to True after setting AppConfig__Endpoint
+      - ASPNETCORE_ENVIRONMENT
+      - APPINSIGHTS_INSTRUMENTATIONKEY
+      - AppConfig__Endpoint
       - FeatureManagement__RedisCache=True
-      - AppConfig__Endpoint=Endpoint=https://xxx.azconfig.io;Id=yyy;Secret=zzz
     ports:
       - "9400:80" # Exposes port 80 from container as port 9400 on local machine
 
@@ -21,6 +20,7 @@ services:
 
   healthcheckui:
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_ENVIRONMENT
+      - APPINSIGHTS_INSTRUMENTATIONKEY
     ports:
       - "9401:80"

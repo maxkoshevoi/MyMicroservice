@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using MyMicroservice.Common.Extensions.Telemetry;
 using System.Threading.Tasks;
 
 namespace HealthCheckUI
@@ -18,9 +19,10 @@ namespace HealthCheckUI
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddTelemetry(Program.APP_NAME);
             services.AddHealthChecksUI(setup =>
             {
-                setup.SetEvaluationTimeInSeconds(5); // Configures the UI to poll for health checks updates every 5 seconds
+                setup.SetEvaluationTimeInSeconds(10); // Configures the UI to poll for health checks updates every 10 seconds
                 setup.AddHealthCheckEndpoint("MyMicroservice", $"http://mymicroservice:80/readiness");
             }).AddInMemoryStorage();
         }
