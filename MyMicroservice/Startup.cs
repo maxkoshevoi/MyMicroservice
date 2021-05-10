@@ -1,14 +1,12 @@
-using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using MyMicroservice.Common.Extensions.FeatureManagement;
 using MyMicroservice.Common.Extensions.Telemetry;
+using MyMicroservice.Common.HealthChecks;
 using MyMicroservice.Middlewares;
 
 namespace MyMicroservice
@@ -64,18 +62,7 @@ namespace MyMicroservice
             {
                 endpoints.MapControllers();
                 endpoints.MapFeatureManagement("/features");
-                
-                // Is container alive
-                endpoints.MapHealthChecks("/liveness", new HealthCheckOptions
-                {
-                    Predicate = r => r.Name == "self"
-                });
-
-                // Is container able to perform work (all dependencies are also checked)
-                endpoints.MapHealthChecks("/readiness", new HealthCheckOptions
-                {
-                    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
-                });
+                endpoints.MapHealthChecks();
             });
         }
     }
@@ -87,7 +74,7 @@ namespace MyMicroservice
             string redisConnectionStr = configuration.GetConnectionString("redis");
 
             services.AddHealthChecks()
-                .AddCheck("self", () => HealthCheckResult.Healthy())
+                .AddSelfCheck()
                 .AddRedis(redisConnectionStr, name: "redis-check", tags: new[] { "redis" });
 
             return services;
