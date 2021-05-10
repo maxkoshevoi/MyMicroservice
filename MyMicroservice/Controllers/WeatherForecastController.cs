@@ -28,7 +28,7 @@ namespace MyMicroservice.Controllers
         }
 
         [HttpGet]
-        public async Task<string> Get([FromServices] IDistributedCache cache)
+        public async Task<string> Get(string query, [FromServices] IDistributedCache cache)
         {
             bool useCache = await _featureManager.IsEnabledAsync("RedisCache");
             string weather = useCache ? await GetCachedWeatherData(cache) : GetWeatherData();
