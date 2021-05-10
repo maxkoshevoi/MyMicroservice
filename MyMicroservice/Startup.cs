@@ -5,8 +5,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MyMicroservice.Common.Extensions.FeatureManagement;
+using MyMicroservice.Common.Extensions.HealthChecks;
 using MyMicroservice.Common.Extensions.Telemetry;
-using MyMicroservice.Common.HealthChecks;
 using MyMicroservice.Middlewares;
 
 namespace MyMicroservice

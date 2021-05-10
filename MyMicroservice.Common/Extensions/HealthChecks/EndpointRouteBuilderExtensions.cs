@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Routing;
 
-namespace MyMicroservice.Common.HealthChecks
+namespace MyMicroservice.Common.Extensions.HealthChecks
 {
     public static class EndpointRouteBuilderExtensions
     {

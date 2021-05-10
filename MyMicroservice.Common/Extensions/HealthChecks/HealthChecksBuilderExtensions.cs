@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 
-namespace MyMicroservice.Common.HealthChecks
+namespace MyMicroservice.Common.Extensions.HealthChecks
 {
     public static class HealthChecksBuilderExtensions
     {
