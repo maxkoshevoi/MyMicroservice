@@ -8,7 +8,14 @@ services:
       - AppConfig__Endpoint
       - FeatureManagement__RedisCache=True
     ports:
-      - "9400:80" # Exposes port 80 from container as port 9400 on local machine
+      - "9401:80" # Exposes port 80 from container as port 9400 on local machine
+      
+  mymicroservice.web:
+    environment:
+      - ASPNETCORE_ENVIRONMENT
+      - APPINSIGHTS_INSTRUMENTATIONKEY
+    ports:
+      - "9400:80"
 
   seq:
     ports:
@@ -23,4 +30,4 @@ services:
       - ASPNETCORE_ENVIRONMENT
       - APPINSIGHTS_INSTRUMENTATIONKEY
     ports:
-      - "9401:80"
+      - "9404:80"

@@ -5,8 +5,8 @@
     <DockerTargetOS>Linux</DockerTargetOS>
     <ProjectGuid>7a723d95-8946-42b4-9685-9818075cceb2</ProjectGuid>
     <DockerLaunchAction>LaunchBrowser</DockerLaunchAction>
-    <DockerServiceUrl>{Scheme}://localhost:{ServicePort}/swagger</DockerServiceUrl>
-    <DockerServiceName>mymicroservice</DockerServiceName>
+    <DockerServiceUrl>{Scheme}://localhost:{ServicePort}</DockerServiceUrl>
+    <DockerServiceName>mymicroservice.web</DockerServiceName>
     <!--Uncomment to execute full Dockerfile in Debug mode. By default only "base" is executed and build is performed locally-->
     <!--<ContainerDevelopmentMode>Regular</ContainerDevelopmentMode>-->
   </PropertyGroup>

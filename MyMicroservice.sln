@@ -11,12 +11,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HealthCheckUI", "HealthChec
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyMicroservice.Tests", "MyMicroservice.Tests\MyMicroservice.Tests.csproj", "{FD303006-0A3E-46F7-BF7E-350F4FEDBCEF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyMicroservice.Common", "MyMicroservice.Common\MyMicroservice.Common.csproj", "{EAD2B530-14A6-40F0-B39C-ABF6F82E028F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyMicroservice.Common", "MyMicroservice.Common\MyMicroservice.Common.csproj", "{EAD2B530-14A6-40F0-B39C-ABF6F82E028F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{CB267491-42F6-4683-ADFB-31BE41A5270A}"
 	ProjectSection(SolutionItems) = preProject
 		Directory.Build.props = Directory.Build.props
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyMicroservice.Web", "MyMicroservice.Web\MyMicroservice.Web.csproj", "{7EF1834C-17FC-458D-8A23-B993BEEBE872}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -44,6 +46,10 @@ Global
 		{EAD2B530-14A6-40F0-B39C-ABF6F82E028F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EAD2B530-14A6-40F0-B39C-ABF6F82E028F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EAD2B530-14A6-40F0-B39C-ABF6F82E028F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7EF1834C-17FC-458D-8A23-B993BEEBE872}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7EF1834C-17FC-458D-8A23-B993BEEBE872}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7EF1834C-17FC-458D-8A23-B993BEEBE872}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7EF1834C-17FC-458D-8A23-B993BEEBE872}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

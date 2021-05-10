@@ -7,6 +7,13 @@ services:
       dockerfile: MyMicroservice\Dockerfile
     depends_on:
       - db
+      
+  mymicroservice.web:
+    build:
+      context: .
+      dockerfile: MyMicroservice.Web\Dockerfile
+    depends_on:
+      - mymicroservice
 
   db:
     image: redis:alpine # alpine - lightweight version of Linux
