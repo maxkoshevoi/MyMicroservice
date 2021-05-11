@@ -54,7 +54,7 @@ namespace MyMicroservice
             }
 
             app.UseTelemetry();
-            app.UseAzureAppConfiguration();
+            app.UseAzureFeatureManagement();
 
             app.UseRouting();
             app.UseAuthorization();
