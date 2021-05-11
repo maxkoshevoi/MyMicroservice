@@ -9,7 +9,7 @@ Simple ASP.NET 5 microservice. Includes tests, health checks with UI, structured
 
 ## Docker
 
-Docker is used to create `images` that contain everything that is needed to run the app. Images as created using instructions listed in `Dockerfile`. Here's an example build command:
+Docker is used to create `images` that contain everything that is needed to run the app. Images are created using instructions listed in `Dockerfile`. Here's an example build command:
 
 `docker build -f "MyMicroservice\Dockerfile" .`
 
@@ -17,7 +17,7 @@ Docker is used to create `images` that contain everything that is needed to run 
 - Instructions for each stage executed top to bottom.
 - Only stages that "final" stage depends on are executed.
 - During **Debug** build Visual Studio only executes "base" stage. Visual Studio handles the rest of the process without regard to the contents of the Dockerfile. If you want to disable the performance optimization and build as the Dockerfile specifies, then set the `ContainerDevelopmentMode` property to `Regular` in the project file (or docker compose project file, if you use it).
-- Multistage build also helps to reduce image size. For example, you don't need while .Net SDK to run the app, but you need it to build it, so "build" stage can use `sdk` image to build the app, and "final" stage can use `runtime` image and just copy artifacts of the "build" stage.
+- Multistage build also helps to reduce image size. For example, you don't need whole .Net SDK to run the app, but you need it to build it, so "build" stage can use `sdk` image to build the app, and "final" stage can use `runtime` image and just copy artifacts of the "build" stage.
 - Each instruction doesn't get executed every time you create new image. Docker tracks what changed from the previous run and only executes instructions after first updated file is copied. That's why "restore" steps are done separately from build. This optimization [works only for local builds and self-hosted agents](https://docs.microsoft.com/en-us/azure/devops/pipelines/ecosystems/containers/build-image?view=azure-devops#is-reutilizing-layer-caching-during-builds-possible-on-azure-pipelines) though.
 - Azure Pipelines can be configured to [cache Docker images](https://docs.microsoft.com/en-us/azure/devops/pipelines/release/caching?view=azure-devops#docker-images), but most common ones are already [pre-cached](https://docs.microsoft.com/en-us/azure/devops/pipelines/ecosystems/containers/build-image?view=azure-devops#what-pre-cached-images-are-available-on-hosted-agents).
 
@@ -39,9 +39,9 @@ Compose is a tool for defining and running multi-container Docker applications. 
 
 - Docker compose is used to configure and start multiple containers at the same time. It doesn't provide any advanced orchestration support (restarting container if it fails, auto-scaling, etc.), so it's mainly used for local development and testing.
 - To build all your images use `docker compose build`, and `docker compose up` to build and start them.
-- If you need to call one container from another one, you can call it by it's name in `docker-compose.yml` file (eg: http:\\\\mycontainer). You don't need to expose any ports from `mycontainer` to do that.
+- If you need to call one container from another one, you can call it by it's name specified in `docker-compose.yml` file (eg: http:\\\\mycontainer). You don't need to expose any ports from `mycontainer` to do that.
 - There can be multiple `docker-compose` files, each adding or updating configuration form the previous one. By default there are `docker-compose.yml` and `docker-compose.override.yml`. You can think of them as `appsettings.json` and `appsettings.Development.json`.
-- If you need to pass the same environment variable (with the same value) into multiple containers, create `.env` file with key-value pairs, and specify default values for needed variables there: `ASPNETCORE_ENVIRONMENT=Development`. After that you can omit value for variables in `docker-compose` file:
+- If you need to pass the same environment variable (with the same value) into multiple containers, create `.env` file with key-value pairs, and specify default values for needed variables: `ASPNETCORE_ENVIRONMENT=Development`. After that you can omit value for variables in `docker-compose` file:
 
 ```yml
 services:
@@ -57,7 +57,7 @@ Production-Grade Container Orchestration
 Kubernetes, also known as K8s, is an open-source system for automating deployment, scaling, and management of containerized applications.
 
 - Use this command to [convert docker-compose file into Kubernetes deployment](https://kubernetes.io/docs/tasks/configure-pod-container/translate-compose-kubernetes/): `kompose -f docker-compose.yml -f docker-compose.override.yml convert`
-- Kubernetes can launch multiple instances of the same image, so you need to create a load balancer to access any container. Internal load balancers is called `Service`, and external one is called `LoadBalancer`.
+- Kubernetes can launch multiple instances of the same image, so you need to create a load balancer to access any container. Internal load balancer is called `Service`, and external one is called `LoadBalancer`.
 
 ## Telemetry
 
@@ -68,7 +68,7 @@ Structured logging uses a defined format to add important details to logs and ma
 `Common` project from this PoC contains all needed pieces to add structured logging to an ASP.NET application.
 
 0. (optional) Add your Application insights instrumentation key in `.env` file.
-1. Add Serilog: In `Program.cs` add `.AddTelemetry(<app-name>)` right after `Host.CreateDefaultBuilder(args)`. This will initialize Serilog with sinks to console, Seq, and app insights.
+1. Add Serilog: In `Program.cs` add `.AddTelemetry(<app-name>)` right after `Host.CreateDefaultBuilder(args)`. This will initialize Serilog with sinks to console, [Seq](https://datalust.co/seq), and app insights.
 2. Catch apps crashes: In `Program.cs` replace `CreateHostBuilder(args).Build()` with `Telemetry.SafeRun(() => CreateHostBuilder(args).Build());`
 3. Enrich HTTP request logs: In `Startup.Configure` add `app.UseTelemetry()` before any handlers whose activities should be logged (like `UseRouting` or `UseEndpoints`).
 
@@ -81,7 +81,7 @@ Distributed tracing allows to obtain information about full request path even it
 `Common` project from this PoC contains all needed pieces to add distributed tracing to an ASP.NET application.
 
 0. (optional) Add your Application insights instrumentation key in `.env` file.
-1. Add trace logging: In `Startup.ConfigureServices` add `services.AddTelemetry(<app-name>)`. This will add Application Insights and Open Telemetry (with Zipkin exporter) tracing.
+1. Add trace logging: In `Startup.ConfigureServices` add `services.AddTelemetry(<app-name>)`. This will add Application Insights and Open Telemetry (with [Zipkin](https://zipkin.io) exporter) tracing.
 
 #### OpenTelemetry
 
@@ -111,9 +111,9 @@ OpenTelemetry **is not** an observability back-end like Jaeger or Prometheus. In
 [Health checks](https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/health-checks) are usually used with an external monitoring service or container orchestrator to check the status of an app.
 
 [Kubernetes users `liveness`, `readiness` and `startup` probes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/) to more effectively manage the cluster:
-- The kubelet uses liveness probes to know when to restart a container. For example, liveness probes could catch a deadlock, where an application is running, but unable to make progress. Restarting a container in such a state can help to make the application more available despite bugs.
-- The kubelet uses readiness probes to know when a container is ready to start accepting traffic. A Pod is considered ready when all of its containers are ready. One use of this signal is to control which Pods are used as backends for Services. When a Pod is not ready, it is removed from Service load balancers.
-- The kubelet uses startup probes to know when a container application has started. If such a probe is configured, it disables liveness and readiness checks until it succeeds, making sure those probes don't interfere with the application startup. This can be used to adopt liveness checks on slow starting containers, avoiding them getting killed by the kubelet before they are up and running.
+- The `kubelet` uses liveness probes to know when to restart a container. For example, liveness probes could catch a deadlock, where an application is running, but unable to make progress. Restarting a container in such a state can help to make the application more available despite bugs.
+- The `kubelet` uses readiness probes to know when a container is ready to start accepting traffic. A Pod is considered ready when all of its containers are ready. One use of this signal is to control which Pods are used as backends for Services. When a Pod is not ready, it is removed from Service load balancers.
+- The `kubelet` uses startup probes to know when a container application has started. If such a probe is configured, it disables liveness and readiness checks until it succeeds, making sure those probes don't interfere with the application startup. This can be used to adopt liveness checks on slow starting containers, avoiding them getting killed by the kubelet before they are up and running.
 
 `Common` project from this PoC contains all needed pieces to add health checks to an ASP.NET application.
 
