@@ -1,11 +1,11 @@
 # MyMicroservice
 
-Simple ASP.NET 5 microservice. Includes tests, health checks with UI, structured logging, tracing, and feature management
+Simple ASP.NET 5 microservice. Includes tests, health checks with UI, structured logging, distributed tracing, and feature management
 
 ## Useful links
 
 - [Microsoft learn: Microservices](https://docs.microsoft.com/en-us/users/dotnet/collections/8mq4i2mzgjwn10)
-- [Video that demonstrates all the things implemented here](https://www.youtube.com/watch?v=PDdHa0ushJ0)
+- [Video that demonstrates most of the things implemented here](https://www.youtube.com/watch?v=PDdHa0ushJ0)
 
 ## Docker
 
