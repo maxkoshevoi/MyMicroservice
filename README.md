@@ -104,7 +104,7 @@ OpenTelemetry **is not** an observability back-end like Jaeger or Prometheus. In
 [Application Insights](https://docs.microsoft.com/en-us/azure/azure-monitor/app/app-insights-overview), a feature of Azure Monitor, is an extensible Application Performance Management (APM) service for developers and DevOps professionals. Use it to monitor your live applications. It will automatically detect performance anomalies, and includes powerful analytics tools to help you diagnose issues and to understand what users actually do with your app.
 
 - [More info on server-side monitoring](https://docs.microsoft.com/en-us/azure/azure-monitor/app/asp-net-core)
-- [How to setup client-side client-side](https://docs.microsoft.com/en-us/azure/azure-monitor/app/javascript)
+- [How to setup client-side monitoring](https://docs.microsoft.com/en-us/azure/azure-monitor/app/javascript)
 
 ## Health checks
 
