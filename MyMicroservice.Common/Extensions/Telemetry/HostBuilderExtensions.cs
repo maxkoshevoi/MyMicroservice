@@ -18,9 +18,9 @@ namespace MyMicroservice.Common.Extensions.Telemetry
                 string? instrumentationKey = context.Configuration["APPINSIGHTS_INSTRUMENTATIONKEY"];
 
                 config
-                    .ReadFrom.Configuration(context.Configuration)
                     .Enrich.WithProperty("ApplicationContext", serviceName)
                     .Enrich.WithProperty("DebuggerAttached", Debugger.IsAttached) // Useful when doing Seq dashboards and want to remove logs under debugging session.
+                     //.ReadFrom.Configuration(context.Configuration)
                      // Following configuration can also be specified in appsettings.json
                     .Enrich.WithSpan()
                     .Enrich.FromLogContext()

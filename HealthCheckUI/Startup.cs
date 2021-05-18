@@ -23,8 +23,8 @@ namespace HealthCheckUI
             services.AddHealthChecksUI(setup =>
             {
                 setup.SetEvaluationTimeInSeconds(10); // Configures the UI to poll for health checks updates every 10 seconds
-                setup.AddHealthCheckEndpoint("MyMicroservice", $"http://mymicroservice:80/readiness");
-                setup.AddHealthCheckEndpoint("MyMicroservice.Web", $"http://mymicroservice.web:80/readiness");
+                setup.AddHealthCheckEndpoint("MyMicroservice", $"http://mymicroservice:80/startup");
+                setup.AddHealthCheckEndpoint("MyMicroservice.Web", $"http://mymicroservice.web:80/startup");
             }).AddInMemoryStorage();
         }
 

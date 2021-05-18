@@ -74,7 +74,6 @@ namespace MyMicroservice
             string redisConnectionStr = configuration.GetConnectionString("redis");
 
             services.AddHealthChecks()
-                .AddSelfCheck()
                 .AddRedis(redisConnectionStr, name: "redis-check", tags: new[] { "redis" });
 
             return services;
