@@ -57,7 +57,7 @@ namespace MyMicroservice.Web
         public static IServiceCollection AddHealthChecks(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddHealthChecks()
-                .AddUrlGroup(new Uri($"http://mymicroservice:80/startup"), name: "backendapi-check", tags: new string[] { "backendapi" });
+                .AddUrlGroup(new Uri($"http://mymicroservice:80/health/startup"), name: "backendapi-check", tags: new string[] { "backendapi" });
 
             return services;
         }
