@@ -11,7 +11,7 @@ namespace MyMicroservice.Web
 
         public static void Main(string[] args)
         {
-            Telemetry.SafeRun(() => CreateHostBuilder(args).Build());
+            CreateHostBuilder(args).Build().Run();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
