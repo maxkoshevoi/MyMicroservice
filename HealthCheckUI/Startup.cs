@@ -19,7 +19,7 @@ namespace HealthCheckUI
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddTelemetry(Program.APP_NAME);
+            services.AddTracing(Program.APP_NAME);
             services.AddHealthChecksUI(setup =>
             {
                 setup.SetEvaluationTimeInSeconds(10); // Configures the UI to poll for health checks updates every 10 seconds

@@ -11,7 +11,7 @@ namespace MyMicroservice.Common.Extensions.Telemetry
         /// Adds Serilog with several sinks
         /// See <see href="https://jkdev.me/asp-net-core-serilog"/> for more information on how to configure Serilog
         /// </summary>
-        public static IHostBuilder AddTelemetry(this IHostBuilder hostBuilder, string? serviceName)
+        public static IHostBuilder AddLogging(this IHostBuilder hostBuilder, string? serviceName)
         {
             return hostBuilder.UseSerilog((context, config) =>
             {

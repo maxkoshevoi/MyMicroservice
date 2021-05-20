@@ -18,7 +18,7 @@ namespace MyMicroservice
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
                 .AddAzureFeatureManagement(true)
-                .AddTelemetry(APP_NAME)
+                .AddLogging(APP_NAME)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();

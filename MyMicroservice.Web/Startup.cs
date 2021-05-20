@@ -20,7 +20,7 @@ namespace MyMicroservice.Web
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddTelemetry(Program.APP_NAME);
+            services.AddTracing(Program.APP_NAME);
             services.AddRazorPages();
             services.AddHttpClient<WeatherClient>(client =>
             {
@@ -40,7 +40,7 @@ namespace MyMicroservice.Web
                 app.UseExceptionHandler("/Error");
             }
 
-            app.UseTelemetry();
+            app.UseLogging();
             app.UseStaticFiles();
             app.UseRouting();
             app.UseAuthorization();

@@ -16,7 +16,7 @@ namespace MyMicroservice.Web
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
-                .AddTelemetry(APP_NAME)
+                .AddLogging(APP_NAME)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();

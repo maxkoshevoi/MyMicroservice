@@ -23,7 +23,7 @@ namespace MyMicroservice
         public void ConfigureServices(IServiceCollection services)
         {
             // Logging and tracing
-            services.AddTelemetry(Program.APP_NAME);
+            services.AddTracing(Program.APP_NAME);
 
             services.AddControllers();
          
@@ -53,7 +53,7 @@ namespace MyMicroservice
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "MyMicroservice v1"));
             }
 
-            app.UseTelemetry();
+            app.UseLogging();
             app.UseAzureFeatureManagement();
 
             app.UseRouting();

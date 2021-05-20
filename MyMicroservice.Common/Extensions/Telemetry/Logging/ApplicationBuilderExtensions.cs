@@ -9,7 +9,7 @@ namespace MyMicroservice.Common.Extensions.Telemetry
         /// This will make the HTTP requests log as rich logs instead of plain text<br/>
         /// (needs to be before UseRouting, UseEndpoints and other similar configuration)
         /// </summary>
-        public static IApplicationBuilder UseTelemetry(this IApplicationBuilder app) =>
+        public static IApplicationBuilder UseLogging(this IApplicationBuilder app) =>
             app.UseSerilogRequestLogging();
     }
 }

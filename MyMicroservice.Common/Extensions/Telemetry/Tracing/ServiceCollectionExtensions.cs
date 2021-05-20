@@ -12,7 +12,7 @@ namespace MyMicroservice.Common.Extensions.Telemetry
         /// Adds AppInsights and OpenTelemetry tracing<br/>
         /// (needs to be before AddControllers)
         /// </summary>
-        public static IServiceCollection AddTelemetry(this IServiceCollection services, string? serviceName)
+        public static IServiceCollection AddTracing(this IServiceCollection services, string? serviceName)
         {
             services.AddAppInsights(serviceName);
             services.AddOpenTelemetryTracing(serviceName);
