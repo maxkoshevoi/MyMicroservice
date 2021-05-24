@@ -69,9 +69,8 @@ Structured logging uses a defined format to add important details to logs and ma
 `Common` project from this PoC contains all needed pieces to add structured logging to an ASP.NET application.
 
 0. (optional) Add your Application insights instrumentation key in `.env` file.
-1. Add Serilog: In `Program.cs` add `.AddTelemetry(<app-name>)` right after `Host.CreateDefaultBuilder(args)`. This will initialize Serilog with sinks to console, [Seq](https://datalust.co/seq), and app insights.
-2. Catch apps crashes: In `Program.cs` replace `CreateHostBuilder(args).Build()` with `Telemetry.SafeRun(() => CreateHostBuilder(args).Build());`
-3. Enrich HTTP request logs: In `Startup.Configure` add `app.UseTelemetry()` before any handlers whose activities should be logged (like `UseRouting` or `UseEndpoints`).
+1. Add Serilog: In `Program.cs` add `.AddLogging(<app-name>)` right after `Host.CreateDefaultBuilder(args)`. This will initialize Serilog with sinks to console, [Seq](https://datalust.co/seq), and app insights.
+2. Enrich HTTP request logs: In `Startup.Configure` add `app.UseLogging()` before any handlers whose activities should be logged (like `UseRouting` or `UseEndpoints`).
 
 ### Tracing
 
@@ -82,7 +81,7 @@ Distributed tracing allows to obtain information about full request path even it
 `Common` project from this PoC contains all needed pieces to add distributed tracing to an ASP.NET application.
 
 0. (optional) Add your Application insights instrumentation key in `.env` file.
-1. Add trace logging: In `Startup.ConfigureServices` add `services.AddTelemetry(<app-name>)`. This will add Application Insights and Open Telemetry (with [Zipkin](https://zipkin.io) exporter) tracing.
+1. Add trace logging: In `Startup.ConfigureServices` add `services.AddTracing(<app-name>)`. This will add Application Insights and Open Telemetry (with [Zipkin](https://zipkin.io) exporter) tracing.
 
 #### OpenTelemetry
 
