@@ -26,9 +26,9 @@ namespace MyMicroservice
             services.AddTracing(Program.APP_NAME);
 
             services.AddControllers();
-         
+
             // Swagger
-            services.AddSwaggerGen();
+            services.AddSwaggerDocument(c => c.Title = Program.APP_NAME);
 
             // Redis cache
             services.AddStackExchangeRedisCache(o =>
@@ -49,8 +49,12 @@ namespace MyMicroservice
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "MyMicroservice v1"));
+                app.UseOpenApi();
+                app.UseSwaggerUi3(c =>
+                {
+                    c.DocExpansion = "list";
+                    c.Path = string.Empty;
+                });
             }
 
             app.UseLogging();
